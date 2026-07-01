@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/practicante-layout :: layout(~{::section})}">
+<section>
+    <div class="max-w-4xl space-y-4">
+        <a th:href="@{/practicante/dashboard}" class="inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>Volver
+        </a>
+        <article class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+            <div class="bg-carbon px-8 py-10 text-white">
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex h-20 w-20 items-center justify-center rounded-full bg-brand text-3xl font-bold text-carbon" th:text="${practicante.usuario.iniciales}">DS</div>
+                    <h2 class="mt-5 text-3xl font-bold" th:text="${practicante.usuario.nombreCompleto}">Practicante</h2>
+                    <p class="mt-2 text-gray-300" th:text="${practicante.usuario.correo}">correo</p>
+                    <span class="mt-4 inline-flex rounded-full bg-purple-100 px-4 py-1 text-sm font-semibold text-purple-700">PRACTICANTE</span>
+                </div>
+            </div>
+            <div class="p-8">
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Código universitario</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.codigoUniversitario}">UPN-2024-001</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Ciclo</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.ciclo}">9</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Especialidad</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.especialidad.nombre}">Medicina General</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Supervisor</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.doctorSupervisor != null ? practicante.doctorSupervisor.usuario.nombreCompleto : 'Sin asignar'}">Supervisor</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">DNI</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.usuario.dni}">80123456</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Teléfono</p><p class="mt-2 font-semibold text-ink" th:text="${practicante.usuario.telefono}">971234560</p></div>
+                </div>
+                <div class="mt-6 rounded-2xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700">El perfil es de solo lectura. La edición se realiza desde administración.</div>
+            </div>
+        </article>
+    </div>
+</section>
+</html>

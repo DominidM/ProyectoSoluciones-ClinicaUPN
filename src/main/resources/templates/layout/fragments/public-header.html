@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header" class="border-b border-gray-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+        <a th:href="@{/}" class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-carbon">
+                <i data-lucide="heart-pulse" class="h-5 w-5"></i>
+            </div>
+            <div>
+                <p class="font-semibold">Clínica Universitaria UPN</p>
+                <p class="text-xs text-muted">Atención presencial segura</p>
+            </div>
+        </a>
+        <nav class="hidden items-center gap-8 text-sm font-medium md:flex">
+            <a th:href="@{/}" class="hover:text-brand transition">Inicio</a>
+            <a th:href="@{/especialidades}" class="hover:text-brand transition">Especialidades</a>
+            <a th:href="@{/sobre-clinica}" class="hover:text-brand transition">Sobre la Clínica</a>
+        </nav>
+        <div class="flex items-center gap-3">
+            <button type="button"
+                    data-theme-toggle
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-muted transition hover:text-ink"
+                    aria-label="Cambiar tema"
+                    title="Cambiar tema">
+                <span data-theme-icon-light class="hidden">
+                    <i data-lucide="sun" class="h-4 w-4"></i>
+                </span>
+                <span data-theme-icon-dark>
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                </span>
+            </button>
+            <a th:href="@{/registro}" class="hidden rounded-xl px-4 py-2 text-sm font-medium text-ink hover:bg-gray-100 transition md:inline-flex">Registrarse</a>
+            <a th:href="@{/login}" class="inline-flex rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-carbon hover:bg-brand-hover transition">Iniciar sesión</a>
+        </div>
+    </div>
+</header>
+</html>

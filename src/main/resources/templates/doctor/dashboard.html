@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/doctor-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Citas de hoy</p><p class="mt-2 text-3xl font-bold text-ink" th:text="${metricas['citasHoy']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Pendientes</p><p class="mt-2 text-3xl font-bold text-yellow-600" th:text="${metricas['citasPendientes']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Pacientes</p><p class="mt-2 text-3xl font-bold text-ink" th:text="${metricas['pacientes']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Atenciones</p><p class="mt-2 text-3xl font-bold text-green-600" th:text="${metricas['atenciones']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Practicantes asignados</p><p class="mt-2 text-3xl font-bold text-ink" th:text="${metricas['practicantes']}">0</p></article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="mb-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-ink">Agenda del Día</h2>
+                    <p class="text-sm text-muted">Citas confirmadas y pendientes para hoy.</p>
+                </div>
+                <a th:href="@{/doctor/mis-citas}" class="text-sm font-semibold text-[#E8B800]">Ver agenda</a>
+            </div>
+            <div class="space-y-3">
+                <div th:if="${#lists.isEmpty(citasHoy)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes citas hoy.</div>
+                <article th:each="cita : ${citasHoy}" class="flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <div>
+                        <p class="font-semibold text-ink" th:text="${cita.paciente.usuario.nombreCompleto}">Paciente</p>
+                        <p class="text-sm text-muted" th:text="${#temporals.format(cita.horaInicio, 'HH:mm')} + ' · ' + ${cita.consultorio.nombre}">09:00</p>
+                    </div>
+                    <span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span>
+                </article>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="mb-4 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-ink">Próximas Citas</h2>
+                    <p class="text-sm text-muted">Agenda futura ordenada por fecha.</p>
+                </div>
+                <a th:href="@{/doctor/mis-citas}" class="text-sm font-semibold text-[#E8B800]">Ver todas</a>
+            </div>
+            <div class="space-y-3">
+                <div th:if="${#lists.isEmpty(proximasCitas)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes próximas citas.</div>
+                <article th:each="cita : ${proximasCitas}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-ink" th:text="${cita.paciente.usuario.nombreCompleto}">Paciente</p>
+                            <p class="text-sm text-muted" th:text="${#temporals.format(cita.fechaCita, 'dd/MM/yyyy')} + ' · ' + ${#temporals.format(cita.horaInicio, 'HH:mm')}">Fecha</p>
+                        </div>
+                        <span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span>
+                    </div>
+                </article>
+            </div>
+        </article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 class="text-xl font-bold text-ink">Pacientes Recientes</h2>
+            <p class="mb-4 text-sm text-muted">Pacientes con citas atendidas o programadas contigo.</p>
+            <div class="space-y-3">
+                <div th:if="${#lists.isEmpty(pacientesRecientes)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">Sin pacientes recientes.</div>
+                <article th:each="paciente : ${pacientesRecientes}" class="flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <div>
+                        <p class="font-semibold text-ink" th:text="${paciente.usuario.nombreCompleto}">Paciente</p>
+                        <p class="text-sm text-muted" th:text="${paciente.edad} + ' años · ' + ${paciente.sexo}">28 años</p>
+                    </div>
+                    <a th:href="@{/doctor/historia/{id}(id=${paciente.id})}" class="text-sm font-semibold text-[#E8B800]">Historia</a>
+                </article>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 class="text-xl font-bold text-ink">Atenciones Recientes</h2>
+            <p class="mb-4 text-sm text-muted">Últimos registros clínicos realizados.</p>
+            <div class="space-y-3">
+                <div th:if="${#lists.isEmpty(atencionesRecientes)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">Sin atenciones registradas.</div>
+                <article th:each="atencion : ${atencionesRecientes}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <p class="font-semibold text-ink" th:text="${atencion.historiaClinica.paciente.usuario.nombreCompleto}">Paciente</p>
+                    <p class="mt-1 text-sm text-muted" th:text="${#temporals.format(atencion.fechaAtencion, 'dd/MM/yyyy HH:mm')} + (${atencion.practicante != null} ? ' · ' + atencion.practicante.usuario.nombreCompleto : '')">Fecha</p>
+                    <p class="mt-3 text-sm text-muted line-clamp-2" th:text="${atencion.diagnostico}">Diagnóstico</p>
+                </article>
+            </div>
+        </article>
+    </div>
+</section>
+</html>

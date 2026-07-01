@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/auth-layout :: layout(~{::section})}">
+<section class="mx-auto max-w-3xl rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+    <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold">Registro de Paciente</h1>
+        <p class="mt-2 text-muted">Crea tu cuenta para acceder a la clínica universitaria.</p>
+    </div>
+    <div th:if="${errorGeneral}" class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" th:text="${errorGeneral}"></div>
+    <div class="mb-6 rounded-2xl border border-brand/40 bg-brand/10 px-4 py-4 text-sm text-ink">
+        Este registro es solo para pacientes. Los doctores y practicantes son registrados por administración.
+    </div>
+    <form th:action="@{/registro}" th:object="${registroPacienteDTO}" method="post" class="grid gap-5 md:grid-cols-2">
+        <div>
+            <label class="mb-2 block text-sm font-medium">DNI *</label>
+            <input th:field="*{dni}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="12345678">
+            <p th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Nombres *</label>
+            <input th:field="*{nombres}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Nombre(s)">
+            <p th:if="${#fields.hasErrors('nombres')}" th:errors="*{nombres}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Apellidos *</label>
+            <input th:field="*{apellidos}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Apellido(s)">
+            <p th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Correo electrónico *</label>
+            <input th:field="*{correo}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="correo@ejemplo.com">
+            <p th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Teléfono *</label>
+            <input th:field="*{telefono}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="9XXXXXXXX">
+            <p th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Fecha de nacimiento *</label>
+            <input type="date" th:field="*{fechaNacimiento}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand">
+            <p th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Sexo *</label>
+            <select th:field="*{sexo}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand">
+                <option value="">Seleccionar...</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="No especificado">No especificado</option>
+            </select>
+            <p th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div class="md:col-span-2">
+            <label class="mb-2 block text-sm font-medium">Dirección *</label>
+            <input th:field="*{direccion}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Av. Los Rosales 234, Trujillo">
+            <p th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Contacto de emergencia *</label>
+            <input th:field="*{contactoEmergencia}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Nombre completo">
+            <p th:if="${#fields.hasErrors('contactoEmergencia')}" th:errors="*{contactoEmergencia}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Teléfono de emergencia *</label>
+            <input th:field="*{telefonoEmergencia}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="9XXXXXXXX">
+            <p th:if="${#fields.hasErrors('telefonoEmergencia')}" th:errors="*{telefonoEmergencia}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Contraseña *</label>
+            <input type="password" th:field="*{password}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Mínimo 6 caracteres">
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div>
+            <label class="mb-2 block text-sm font-medium">Confirmar contraseña *</label>
+            <input type="password" th:field="*{confirmarPassword}" class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand" placeholder="Repite tu contraseña">
+            <p th:if="${#fields.hasErrors('confirmarPassword')}" th:errors="*{confirmarPassword}" class="mt-1 text-xs text-red-600"></p>
+        </div>
+        <div class="md:col-span-2">
+            <button type="submit" class="w-full rounded-xl bg-brand px-4 py-3 font-semibold text-carbon transition hover:bg-brand-hover">Crear cuenta de paciente</button>
+        </div>
+        <div class="md:col-span-2 text-center text-sm text-muted">
+            ¿Ya tienes cuenta?
+            <a th:href="@{/login}" class="font-semibold text-brand">Iniciar sesión</a>
+        </div>
+    </form>
+</section>
+</html>

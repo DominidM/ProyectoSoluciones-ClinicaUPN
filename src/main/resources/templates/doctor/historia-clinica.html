@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/doctor-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <a th:href="@{/doctor/mis-pacientes}" class="inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink">
+        <i data-lucide="arrow-left" class="h-4 w-4"></i>Volver
+    </a>
+    <div class="grid gap-6 xl:grid-cols-[420px,1fr]">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand/20 text-xl font-bold text-ink" th:text="${paciente.usuario.iniciales}">LR</div>
+                <div>
+                    <h2 class="text-2xl font-bold text-ink" th:text="${paciente.usuario.nombreCompleto}">Paciente</h2>
+                    <p class="text-sm text-muted" th:text="${paciente.usuario.correo}">correo</p>
+                </div>
+            </div>
+            <div class="mt-6 space-y-4 text-sm">
+                <div class="flex justify-between gap-4"><span class="text-muted">Sexo</span><span class="font-semibold text-ink" th:text="${paciente.sexo}">Femenino</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Teléfono</span><span class="font-semibold text-ink" th:text="${paciente.usuario.telefono}">921345678</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Correo</span><span class="font-semibold text-ink text-right" th:text="${paciente.usuario.correo}">correo</span></div>
+            </div>
+            <div class="mt-6 space-y-4">
+                <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Alergias</p><p class="mt-2 text-sm text-ink" th:text="${historia.alergias}">No refiere.</p></div>
+                <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Antecedentes</p><p class="mt-2 text-sm text-ink" th:text="${historia.antecedentes}">Sin antecedentes.</p></div>
+                <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Observaciones generales</p><p class="mt-2 text-sm text-ink" th:text="${historia.observacionesGenerales}">Observaciones.</p></div>
+            </div>
+        </article>
+
+        <div class="space-y-6">
+            <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-ink">Atenciones Clínicas (<span th:text="${#lists.size(historia.atenciones)}">0</span>)</h3>
+                <p class="mb-4 text-sm text-muted">Registros clínicos visibles para seguimiento médico.</p>
+                <div class="space-y-4">
+                    <div th:if="${#lists.isEmpty(historia.atenciones)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">Aún no hay atenciones registradas.</div>
+                    <article th:each="atencion : ${historia.atenciones}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="font-semibold text-ink" th:text="${#temporals.format(atencion.fechaAtencion, 'dd/MM/yyyy')}">20/01/2025</p>
+                            <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700" th:text="${atencion.cita.especialidad.nombre}">Medicina General</span>
+                        </div>
+                        <div class="mt-4 grid gap-4 md:grid-cols-2">
+                            <div><p class="text-xs font-semibold uppercase tracking-wide text-muted">Diagnóstico</p><p class="mt-1 text-sm text-ink" th:text="${atencion.diagnostico}">Diagnóstico</p></div>
+                            <div><p class="text-xs font-semibold uppercase tracking-wide text-muted">Tratamiento</p><p class="mt-1 text-sm text-ink" th:text="${atencion.tratamiento}">Tratamiento</p></div>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-ink">Citas Relacionadas</h3>
+                <p class="mb-4 text-sm text-muted">Puedes iniciar una atención desde una cita sin registro clínico.</p>
+                <div class="space-y-3">
+                    <article th:each="cita : ${citas}" class="flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                        <div>
+                            <p class="font-semibold text-ink" th:text="${#temporals.format(cita.fechaCita, 'dd/MM/yyyy')} + ' · ' + ${#temporals.format(cita.horaInicio, 'HH:mm')}">Fecha</p>
+                            <p class="text-sm text-muted" th:text="${cita.consultorio.nombre} + ' · ' + ${cita.motivo}">Consultorio</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span>
+                            <a th:if="${cita.atencionClinica == null}" th:href="@{/doctor/atenciones/nueva/{id}(id=${cita.id})}" class="text-sm font-semibold text-[#E8B800]">Registrar atención</a>
+                        </div>
+                    </article>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' | Clínica Universitaria UPN'">Clínica Universitaria UPN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function () {
+            const storedTheme = localStorage.getItem("clinica-theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+                document.documentElement.classList.add("theme-dark");
+            }
+        })();
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#F5C518',
+                        'brand-hover': '#E8B800',
+                        carbon: '#1E2832',
+                        ink: '#1F2937',
+                        muted: '#6B7280'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<div th:fragment="topbar(title, description)" class="border-b border-gray-200 bg-white px-4 py-5 md:px-6">
+    <div class="flex items-center justify-between gap-4">
+        <div class="min-w-0">
+            <h1 class="text-2xl font-bold text-ink" th:text="${title}">Dashboard</h1>
+            <p class="mt-1 text-sm text-muted" th:if="${description}" th:text="${description}"></p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button type="button"
+                    data-theme-toggle
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-muted transition hover:text-ink"
+                    aria-label="Cambiar tema"
+                    title="Cambiar tema">
+                <span data-theme-icon-light class="hidden">
+                    <i data-lucide="sun" class="h-4 w-4"></i>
+                </span>
+                <span data-theme-icon-dark>
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                </span>
+            </button>
+            <button class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-muted">
+                <i data-lucide="bell" class="h-4 w-4"></i>
+            </button>
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand font-semibold text-carbon"
+                 th:text="${usuarioActual != null ? usuarioActual.iniciales : 'CU'}">CU</div>
+        </div>
+    </div>
+</div>
+</html>

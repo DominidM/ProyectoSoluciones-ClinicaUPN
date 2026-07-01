@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/doctor-layout :: layout(~{::section})}">
+<section>
+    <div class="max-w-4xl space-y-4">
+        <a th:href="@{/doctor/dashboard}" class="inline-flex items-center gap-2 text-sm text-muted transition hover:text-ink">
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>Volver
+        </a>
+        <article class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+            <div class="bg-carbon px-8 py-10 text-white">
+                <div class="flex flex-col items-center text-center">
+                    <div class="flex h-20 w-20 items-center justify-center rounded-full bg-brand text-3xl font-bold text-carbon" th:text="${doctor.usuario.iniciales}">DC</div>
+                    <h2 class="mt-5 text-3xl font-bold" th:text="${doctor.usuario.nombreCompleto}">Doctor</h2>
+                    <p class="mt-2 text-brand font-semibold" th:text="${doctor.especialidad.nombre}">Medicina General</p>
+                    <p class="mt-1 text-gray-300" th:text="${doctor.usuario.correo}">correo</p>
+                </div>
+            </div>
+            <div class="p-8">
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">CMP</p><p class="mt-2 font-semibold text-ink" th:text="${doctor.cmp}">CMP-45231</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Teléfono</p><p class="mt-2 font-semibold text-ink" th:text="${doctor.usuario.telefono}">987654321</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">DNI</p><p class="mt-2 font-semibold text-ink" th:text="${doctor.usuario.dni}">08234567</p></div>
+                    <div class="rounded-2xl bg-gray-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Estado</p><div class="mt-2"><span th:replace="~{layout/fragments/badges :: estado(${doctor.estado})}"></span></div></div>
+                    <div class="rounded-2xl bg-gray-50 p-4 md:col-span-2"><p class="text-xs font-semibold uppercase tracking-wide text-muted">Experiencia</p><p class="mt-2 font-semibold text-ink" th:text="${doctor.experiencia}">12 años</p></div>
+                </div>
+                <div class="mt-6 rounded-2xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700">El perfil es de solo lectura. Las actualizaciones se realizan desde administración.</div>
+            </div>
+        </article>
+    </div>
+</section>
+</html>

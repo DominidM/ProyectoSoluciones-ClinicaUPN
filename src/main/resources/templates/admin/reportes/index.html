@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-2xl font-bold text-ink">Reportes Administrativos</h2>
+        <p class="mt-1 text-sm text-muted">Visualiza métricas operativas, académicas y asistenciales.</p>
+        <form method="get" class="mt-6 flex flex-wrap items-end gap-3">
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-ink">Desde</label>
+                <input type="date" name="desde" th:value="${desde}" class="rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+            </div>
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-ink">Hasta</label>
+                <input type="date" name="hasta" th:value="${hasta}" class="rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+            </div>
+            <button class="rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">Aplicar filtros</button>
+        </form>
+    </article>
+
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Pacientes atendidos</p><p class="mt-2 text-4xl font-bold text-ink" th:text="${metricas['pacientes']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Total atenciones</p><p class="mt-2 text-4xl font-bold text-ink" th:text="${metricas['totalAtenciones']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Citas canceladas</p><p class="mt-2 text-4xl font-bold text-red-500" th:text="${metricas['citasCanceladas']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Evaluaciones</p><p class="mt-2 text-4xl font-bold text-ink" th:text="${#lists.size(evaluacionesRecientes)}">0</p></article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Citas por Especialidad</h3>
+            <div class="mt-5 space-y-4">
+                <div th:each="item : ${citasPorEspecialidad.entrySet()}" class="space-y-1">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-medium text-ink" th:text="${item.key}">Especialidad</span>
+                        <span class="text-muted" th:text="${item.value}">0</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-[#F5C518]" th:style="'width:' + (${item.value} * 18) + 'px'"></div></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Atenciones por Mes</h3>
+            <div class="mt-5 space-y-4">
+                <div th:each="item : ${atencionesPorMes.entrySet()}" class="space-y-1">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-medium text-ink" th:text="${item.key}">Mes</span>
+                        <span class="text-muted" th:text="${item.value}">0</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-[#1E2832]" th:style="'width:' + (${item.value} * 18) + 'px'"></div></div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Consultorios más usados</h3>
+            <div class="mt-5 space-y-4">
+                <div th:each="item : ${consultoriosMasUsados.entrySet()}" class="space-y-1">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="font-medium text-ink" th:text="${item.key}">Consultorio</span>
+                        <span class="text-muted" th:text="${item.value}">0</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-blue-500" th:style="'width:' + (${item.value} * 18) + 'px'"></div></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Distribución de Evaluaciones</h3>
+            <div class="mt-5 space-y-4">
+                <div th:each="item : ${distribucionEvaluaciones.entrySet()}" class="flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3 text-sm">
+                    <span class="font-medium text-ink" th:text="${item.key}">18-20</span>
+                    <span class="rounded-full bg-brand/20 px-3 py-1 font-semibold text-ink" th:text="${item.value}">0</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Estado de Citas</h3>
+            <div class="mt-5 space-y-4">
+                <div th:each="item : ${estadoCitas.entrySet()}" class="flex items-center justify-between rounded-2xl bg-gray-50 px-4 py-3 text-sm">
+                    <span class="font-medium text-ink" th:text="${item.key}">PENDIENTE</span>
+                    <span class="rounded-full bg-white px-3 py-1 font-semibold text-ink" th:text="${item.value}">0</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 class="text-xl font-bold text-ink">Evaluaciones Recientes</h3>
+            <div class="mt-5 space-y-4">
+                <div th:if="${#lists.isEmpty(evaluacionesRecientes)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No hay evaluaciones recientes.</div>
+                <article th:each="evaluacion : ${evaluacionesRecientes}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-ink" th:text="${evaluacion.practicante.usuario.nombreCompleto}">Practicante</p>
+                            <p class="text-sm text-muted" th:text="${evaluacion.doctorSupervisor.usuario.nombreCompleto}">Supervisor</p>
+                        </div>
+                        <span th:replace="~{layout/fragments/badges :: puntaje(${evaluacion.puntaje})}"></span>
+                    </div>
+                </article>
+            </div>
+        </article>
+    </div>
+</section>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Clínica Universitaria UPN'">Clínica Universitaria UPN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function () {
+            const storedTheme = localStorage.getItem("clinica-theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+                document.documentElement.classList.add("theme-dark");
+            }
+        })();
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#F5C518',
+                        'brand-hover': '#E8B800',
+                        carbon: '#1E2832',
+                        ink: '#1F2937',
+                        muted: '#6B7280'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-gray-100 text-ink" data-theme-scope="portal">
+<div class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="w-full max-w-5xl">
+        <div class="mb-6 flex items-center justify-between">
+            <a th:href="@{/}" class="inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-ink transition">
+                <i data-lucide="arrow-left" class="h-4 w-4"></i>
+                Volver al inicio
+            </a>
+            <div class="flex items-center gap-3">
+            <button type="button"
+                    data-theme-toggle
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-muted transition hover:text-ink"
+                    aria-label="Cambiar tema"
+                    title="Cambiar tema">
+                <span data-theme-icon-light class="hidden">
+                    <i data-lucide="sun" class="h-4 w-4"></i>
+                </span>
+                <span data-theme-icon-dark>
+                    <i data-lucide="moon" class="h-4 w-4"></i>
+                </span>
+            </button>
+            <div class="inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm border border-gray-200">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-carbon">
+                    <i data-lucide="heart-pulse" class="h-5 w-5"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold">Clínica Universitaria UPN</p>
+                    <p class="text-xs text-muted">Portal de acceso</p>
+                </div>
+            </div>
+            </div>
+        </div>
+        <section th:replace="${content}"></section>
+    </div>
+</div>
+<div th:replace="~{layout/fragments/toast :: toast}"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Clínica Universitaria UPN'">Clínica Universitaria UPN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        (function () {
+            const storedTheme = localStorage.getItem("clinica-theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+                document.documentElement.classList.add("theme-dark");
+            }
+        })();
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#F5C518',
+                        'brand-hover': '#E8B800',
+                        carbon: '#1E2832',
+                        ink: '#1F2937',
+                        muted: '#6B7280'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="bg-white text-ink" data-theme-scope="portal">
+<div th:replace="~{layout/fragments/public-header :: header}"></div>
+<main>
+    <div th:insert="${content}"></div>
+    <div class="mx-auto max-w-7xl px-4 pb-10 md:px-6">
+        <div th:replace="~{layout/fragments/pagination :: pagination}"></div>
+    </div>
+</main>
+<div th:replace="~{layout/fragments/public-footer :: footer}"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

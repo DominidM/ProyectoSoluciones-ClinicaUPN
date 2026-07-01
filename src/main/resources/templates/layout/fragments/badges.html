@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<span th:fragment="estado(activo)"
+      class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+      th:classappend="${activo} ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'"
+      th:text="${activo} ? 'Activo' : 'Inactivo'">Activo</span>
+
+<span th:fragment="cita(estado)"
+      class="inline-flex rounded-full px-3 py-1 text-xs font-semibold"
+      th:classappend="${estado.name() == 'PENDIENTE'} ? 'bg-yellow-100 text-yellow-700' :
+                      (${estado.name() == 'CONFIRMADA'} ? 'bg-blue-100 text-blue-700' :
+                      (${estado.name() == 'ATENDIDA'} ? 'bg-green-100 text-green-700' :
+                      (${estado.name() == 'CANCELADA'} ? 'bg-red-100 text-red-700' : 'bg-purple-100 text-purple-700')))"
+      th:text="${estado}">PENDIENTE</span>
+
+<span th:fragment="puntaje(valor)"
+      class="inline-flex rounded-full bg-brand/20 px-3 py-1 text-xs font-semibold text-ink"
+      th:text="${valor} + '/20'">17/20</span>
+</html>

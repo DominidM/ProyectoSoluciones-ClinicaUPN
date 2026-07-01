@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="sidebar" class="app-sidebar flex h-full min-h-screen flex-col bg-carbon text-white">
+    <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-carbon">
+            <i data-lucide="heart-pulse" class="h-5 w-5"></i>
+        </div>
+        <div><p class="font-semibold">Clínica UPN</p><p class="text-sm text-gray-300">Practicante</p></div>
+    </div>
+    <nav class="flex-1 space-y-1 px-3 py-4 text-sm">
+        <a th:href="@{/practicante/dashboard}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="layout-dashboard" class="h-4 w-4"></i>Dashboard</a>
+        <a th:href="@{/practicante/mis-asignaciones}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="clipboard-list" class="h-4 w-4"></i>Mis Asignaciones</a>
+        <a th:href="@{/practicante/atenciones-participadas}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="heart-handshake" class="h-4 w-4"></i>Atenciones Participadas</a>
+        <a th:href="@{/practicante/mis-evaluaciones}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="star" class="h-4 w-4"></i>Mis Evaluaciones</a>
+        <a th:href="@{/practicante/mi-supervisor}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="shield-user" class="h-4 w-4"></i>Mi Supervisor</a>
+        <a th:href="@{/practicante/perfil}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="user-circle-2" class="h-4 w-4"></i>Perfil</a>
+    </nav>
+    <div class="border-t border-white/10 px-4 py-4">
+        <form th:action="@{/logout}" method="post">
+            <button class="flex w-full items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="log-out" class="h-4 w-4"></i>Cerrar sesión</button>
+        </form>
+    </div>
+</aside>
+</html>

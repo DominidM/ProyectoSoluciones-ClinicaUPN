@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/doctor-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-2xl font-bold text-ink">Practicantes Asignados</h2>
+        <p class="mt-1 text-sm text-muted">Listado de practicantes que supervisas actualmente.</p>
+        <div class="mt-6 grid gap-5 md:grid-cols-2">
+            <div th:if="${#lists.isEmpty(practicantes)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes practicantes asignados.</div>
+            <article th:each="practicante : ${practicantes}" class="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                <div class="flex items-center gap-4">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 font-bold text-purple-700" th:text="${practicante.usuario.iniciales}">DS</div>
+                    <div>
+                        <h3 class="font-semibold text-ink" th:text="${practicante.usuario.nombreCompleto}">Practicante</h3>
+                        <p class="text-sm text-muted" th:text="${practicante.codigoUniversitario}">UPN-2024-001</p>
+                    </div>
+                </div>
+                <div class="mt-4 grid gap-2 text-sm text-muted">
+                    <p th:text="${practicante.especialidad.nombre}">Especialidad</p>
+                    <p th:text="'Ciclo ' + ${practicante.ciclo}">Ciclo 9</p>
+                </div>
+                <div class="mt-5 flex items-center justify-between">
+                    <span th:replace="~{layout/fragments/badges :: estado(${practicante.estado})}"></span>
+                    <a th:href="@{/doctor/evaluaciones/nueva/{id}(id=${practicante.id})}" class="rounded-xl bg-[#F5C518] px-4 py-2 text-sm font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">Evaluar</a>
+                </div>
+            </article>
+        </div>
+    </article>
+</section>
+</html>

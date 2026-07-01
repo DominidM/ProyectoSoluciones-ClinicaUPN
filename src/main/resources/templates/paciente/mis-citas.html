@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/paciente-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Mis Citas</h2>
+                <p class="mt-1 text-sm text-muted">Historial completo de tus citas médicas presenciales.</p>
+            </div>
+            <a th:href="@{/paciente/solicitar-cita}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                <i data-lucide="calendar-plus" class="h-4 w-4"></i>Solicitar cita
+            </a>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2" id="estado-filtros">
+            <button type="button" data-filter="TODAS" class="rounded-xl bg-carbon px-4 py-2 text-sm font-semibold text-white">Todas</button>
+            <button type="button" data-filter="PENDIENTE" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Pendiente</button>
+            <button type="button" data-filter="CONFIRMADA" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Confirmada</button>
+            <button type="button" data-filter="ATENDIDA" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Atendida</button>
+            <button type="button" data-filter="CANCELADA" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Cancelada</button>
+            <button type="button" data-filter="REPROGRAMADA" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Reprogramada</button>
+        </div>
+
+        <div class="mt-6 space-y-4" id="citas-lista">
+            <div th:if="${#lists.isEmpty(citas)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes citas registradas por el momento.</div>
+            <article th:each="cita : ${citas}" th:attr="data-estado=${cita.estado.name()}" class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-xl font-bold text-ink" th:text="${cita.especialidad.nombre}">Medicina General</h3>
+                            <span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span>
+                        </div>
+                        <p class="mt-2 text-sm text-muted" th:text="${cita.doctor.usuario.nombreCompleto}">Dr. Carlos Mendoza Reyes</p>
+                        <p class="mt-1 text-sm text-muted" th:text="${cita.motivo}">Motivo de consulta</p>
+                    </div>
+                    <div class="space-y-2 text-sm text-muted">
+                        <p th:text="${#temporals.format(cita.fechaCita, 'dd/MM/yyyy')}">20/01/2025</p>
+                        <p th:text="${#temporals.format(cita.horaInicio, 'HH:mm')} + ' - ' + ${#temporals.format(cita.horaFin, 'HH:mm')}">09:00 - 09:30</p>
+                        <p th:text="${cita.consultorio.nombre}">Consultorio 101</p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </article>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const filtros = document.querySelectorAll('#estado-filtros [data-filter]');
+            const items = document.querySelectorAll('#citas-lista [data-estado]');
+
+            filtros.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    filtros.forEach((other) => {
+                        other.classList.remove('bg-carbon', 'text-white');
+                        other.classList.add('border', 'border-gray-300', 'text-ink');
+                    });
+                    btn.classList.add('bg-carbon', 'text-white');
+                    btn.classList.remove('border', 'border-gray-300', 'text-ink');
+
+                    const estado = btn.dataset.filter;
+                    items.forEach((item) => {
+                        item.style.display = estado === 'TODAS' || item.dataset.estado === estado ? '' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
+</section>
+</html>

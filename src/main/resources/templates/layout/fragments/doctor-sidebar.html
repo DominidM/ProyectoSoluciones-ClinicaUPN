@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="sidebar" class="app-sidebar flex h-full min-h-screen flex-col bg-carbon text-white">
+    <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-carbon">
+            <i data-lucide="heart-pulse" class="h-5 w-5"></i>
+        </div>
+        <div><p class="font-semibold">Clínica UPN</p><p class="text-sm text-gray-300">Doctor</p></div>
+    </div>
+    <nav class="flex-1 space-y-1 px-3 py-4 text-sm">
+        <a th:href="@{/doctor/dashboard}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="layout-dashboard" class="h-4 w-4"></i>Dashboard</a>
+        <a th:href="@{/doctor/mis-citas}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="calendar-plus" class="h-4 w-4"></i>Mis Citas</a>
+        <a th:href="@{/doctor/mis-pacientes}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="users" class="h-4 w-4"></i>Mis Pacientes</a>
+        <a th:href="@{/doctor/atenciones}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="activity" class="h-4 w-4"></i>Atenciones Clínicas</a>
+        <a th:href="@{/doctor/practicantes}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="graduation-cap" class="h-4 w-4"></i>Practicantes Asignados</a>
+        <a th:href="@{/doctor/evaluaciones}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="star" class="h-4 w-4"></i>Evaluaciones</a>
+        <a th:href="@{/doctor/perfil}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="user-circle-2" class="h-4 w-4"></i>Perfil</a>
+    </nav>
+    <div class="border-t border-white/10 px-4 py-4">
+        <form th:action="@{/logout}" method="post">
+            <button class="flex w-full items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="log-out" class="h-4 w-4"></i>Cerrar sesión</button>
+        </form>
+    </div>
+</aside>
+</html>

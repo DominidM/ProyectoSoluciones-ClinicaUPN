@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/paciente-layout :: layout(~{::section})}">
+<section>
+    <div class="max-w-4xl space-y-4">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Solicitar una cita</h2>
+                <p class="mt-1 text-sm text-muted">Todas las citas del sistema son presenciales. Selecciona especialidad, doctor, fecha y motivo de consulta.</p>
+            </div>
+
+            <div th:if="${errorGeneral}" class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" th:text="${errorGeneral}">
+                Ocurrió un error.
+            </div>
+
+            <form th:action="@{/paciente/solicitar-cita}" th:object="${citaForm}" method="post" class="mt-6 space-y-6">
+                <div>
+                    <label class="mb-3 block text-sm font-semibold text-ink">Especialidad *</label>
+                    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        <label th:each="especialidad : ${especialidades}" class="cursor-pointer">
+                            <input type="radio" th:field="*{especialidadId}" th:value="${especialidad.id}" class="peer sr-only">
+                            <span class="block rounded-2xl border border-gray-300 px-4 py-4 text-base font-semibold text-ink transition hover:border-brand hover:bg-brand/10 peer-checked:border-[#F5C518] peer-checked:bg-amber-50 peer-checked:ring-2 peer-checked:ring-[#F5C518]/30"
+                                  th:text="${especialidad.nombre}">Medicina General</span>
+                        </label>
+                    </div>
+                    <p th:if="${#fields.hasErrors('especialidadId')}" th:errors="*{especialidadId}" class="mt-2 text-sm text-red-600">Error</p>
+                </div>
+
+                <div>
+                    <label class="mb-3 block text-sm font-semibold text-ink">Doctor *</label>
+                    <p class="mb-3 text-sm text-muted" data-doctor-help>Selecciona una especialidad para ver los doctores disponibles.</p>
+                    <p class="mb-3 hidden text-sm text-red-600" data-doctor-empty>No hay doctores activos para la especialidad seleccionada.</p>
+                    <div class="grid gap-3 md:grid-cols-2">
+                        <label th:each="doctor : ${doctores}" class="cursor-pointer" data-doctor-card="true" th:attr="data-especialidad-id=${doctor.especialidad.id}">
+                            <input type="radio" th:field="*{doctorId}" th:value="${doctor.id}" class="peer sr-only">
+                            <div class="rounded-2xl border border-gray-300 p-4 transition hover:border-brand hover:bg-brand/10 peer-checked:border-[#F5C518] peer-checked:bg-amber-50 peer-checked:ring-2 peer-checked:ring-[#F5C518]/30">
+                                <div class="flex items-start gap-3">
+                                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 font-semibold text-blue-700" th:text="${doctor.usuario.iniciales}">DC</div>
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-ink" th:text="${doctor.usuario.nombreCompleto}">Dr. Carlos Mendoza Reyes</p>
+                                        <p class="text-sm text-muted" th:text="${doctor.experiencia != null and !#strings.isEmpty(doctor.experiencia) ? doctor.especialidad.nombre + ' · ' + doctor.experiencia : doctor.especialidad.nombre}">Medicina General · 12 años</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <p th:if="${#fields.hasErrors('doctorId')}" th:errors="*{doctorId}" class="mt-2 text-sm text-red-600">Error</p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <label for="fechaCita" class="mb-2 block text-sm font-semibold text-ink">Fecha *</label>
+                        <input id="fechaCita" type="date" th:field="*{fechaCita}"
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+                        <p th:if="${#fields.hasErrors('fechaCita')}" th:errors="*{fechaCita}" class="mt-2 text-sm text-red-600">Error</p>
+                    </div>
+                    <div>
+                        <label for="horaInicio" class="mb-2 block text-sm font-semibold text-ink">Hora preferida *</label>
+                        <input id="horaInicio" type="time" th:field="*{horaInicio}" step="1800"
+                               class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+                        <p th:if="${#fields.hasErrors('horaInicio')}" th:errors="*{horaInicio}" class="mt-2 text-sm text-red-600">Error</p>
+                    </div>
+                </div>
+
+                <input id="horaFin" type="hidden" th:field="*{horaFin}">
+
+                <div>
+                    <label for="motivo" class="mb-2 block text-sm font-semibold text-ink">Motivo de consulta</label>
+                    <textarea id="motivo" rows="4" th:field="*{motivo}"
+                              placeholder="Describe brevemente el motivo de tu consulta presencial."
+                              class="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F5C518]"></textarea>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button class="rounded-xl bg-[#F5C518] px-5 py-3 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">Solicitar cita</button>
+                    <a th:href="@{/paciente/mis-citas}" class="rounded-xl border border-gray-300 px-5 py-3 font-medium text-ink transition hover:bg-gray-50">Cancelar</a>
+                </div>
+            </form>
+        </article>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const especialidadInputs = Array.from(document.querySelectorAll('input[name="especialidadId"]'));
+            const doctorCards = Array.from(document.querySelectorAll('[data-doctor-card]'));
+            const doctorHelp = document.querySelector('[data-doctor-help]');
+            const doctorEmpty = document.querySelector('[data-doctor-empty]');
+            const horaInicioInput = document.getElementById('horaInicio');
+            const horaFinInput = document.getElementById('horaFin');
+
+            function syncHoraFin() {
+                if (!horaInicioInput || !horaFinInput || !horaInicioInput.value) {
+                    horaFinInput.value = '';
+                    return;
+                }
+
+                const [hours, minutes] = horaInicioInput.value.split(':').map(Number);
+                if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+                    horaFinInput.value = '';
+                    return;
+                }
+
+                const totalMinutes = (hours * 60) + minutes + 30;
+                const endHours = Math.floor((totalMinutes % (24 * 60)) / 60).toString().padStart(2, '0');
+                const endMinutes = (totalMinutes % 60).toString().padStart(2, '0');
+                horaFinInput.value = `${endHours}:${endMinutes}`;
+            }
+
+            function updateDoctorOptions() {
+                const selectedEspecialidad = document.querySelector('input[name="especialidadId"]:checked')?.value;
+                let visibleDoctors = 0;
+
+                doctorCards.forEach((card) => {
+                    const matches = selectedEspecialidad && card.dataset.especialidadId === selectedEspecialidad;
+                    card.classList.toggle('hidden', !matches);
+                    const doctorInput = card.querySelector('input[name="doctorId"]');
+
+                    if (!matches && doctorInput?.checked) {
+                        doctorInput.checked = false;
+                    }
+
+                    if (matches) {
+                        visibleDoctors += 1;
+                    }
+                });
+
+                if (!selectedEspecialidad) {
+                    doctorHelp?.classList.remove('hidden');
+                    doctorEmpty?.classList.add('hidden');
+                    return;
+                }
+
+                doctorHelp?.classList.add('hidden');
+                doctorEmpty?.classList.toggle('hidden', visibleDoctors > 0);
+            }
+
+            especialidadInputs.forEach((input) => input.addEventListener('change', updateDoctorOptions));
+            horaInicioInput?.addEventListener('input', syncHoraFin);
+            horaInicioInput?.addEventListener('change', syncHoraFin);
+
+            syncHoraFin();
+            updateDoctorOptions();
+        });
+    </script>
+</section>
+</html>

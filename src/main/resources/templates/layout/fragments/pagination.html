@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="pagination" th:if="${totalPaginas != null and totalRegistros > 0}"
+     class="mt-6 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+     aria-label="Paginación">
+    <p class="text-sm text-muted">
+        Mostrando <span class="font-semibold text-ink" th:text="${registroDesde}">1</span>-<span class="font-semibold text-ink" th:text="${registroHasta}">10</span>
+        de <span class="font-semibold text-ink" th:text="${totalRegistros}">10</span>
+    </p>
+    <div th:if="${totalPaginas > 1}" class="flex items-center gap-1">
+        <a th:if="${paginaActual > 0}" th:href="${paginacionBaseUrl + 'page=' + (paginaActual - 1)}"
+           class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-ink transition hover:bg-gray-50"
+           aria-label="Página anterior" title="Página anterior">
+            <i data-lucide="chevron-left" class="h-4 w-4"></i>
+        </a>
+        <span th:unless="${paginaActual > 0}" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-300">
+            <i data-lucide="chevron-left" class="h-4 w-4"></i>
+        </span>
+
+        <a th:each="numero : ${paginasVisibles}"
+           th:href="${paginacionBaseUrl + 'page=' + numero}"
+           th:text="${numero + 1}"
+           th:class="${numero == paginaActual
+               ? 'inline-flex h-9 min-w-9 items-center justify-center rounded-lg bg-[#F5C518] px-3 font-semibold text-[#1F2937]'
+               : 'inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-gray-200 px-3 text-ink transition hover:bg-gray-50'}">1</a>
+
+        <a th:if="${paginaActual + 1 < totalPaginas}" th:href="${paginacionBaseUrl + 'page=' + (paginaActual + 1)}"
+           class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-ink transition hover:bg-gray-50"
+           aria-label="Página siguiente" title="Página siguiente">
+            <i data-lucide="chevron-right" class="h-4 w-4"></i>
+        </a>
+        <span th:unless="${paginaActual + 1 < totalPaginas}" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-300">
+            <i data-lucide="chevron-right" class="h-4 w-4"></i>
+        </span>
+    </div>
+</nav>
+</html>

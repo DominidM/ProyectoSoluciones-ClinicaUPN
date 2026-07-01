@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Especialidades</h2>
+                <p class="mt-1 text-sm text-muted">Catálogo clínico administrado por la universidad.</p>
+            </div>
+            <a th:href="@{/admin/especialidades/nuevo}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                <i data-lucide="plus" class="h-4 w-4"></i>Agregar especialidad
+            </a>
+        </div>
+
+        <div class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <article th:each="especialidad : ${especialidades}" class="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <h3 class="text-xl font-bold text-ink" th:text="${especialidad.nombre}">Medicina General</h3>
+                        <p class="mt-2 text-sm text-muted" th:text="${especialidad.descripcion}">Descripción</p>
+                    </div>
+                    <span th:replace="~{layout/fragments/badges :: estado(${especialidad.estado})}"></span>
+                </div>
+                <div class="mt-5 flex flex-wrap gap-3">
+                    <a th:href="@{/admin/especialidades/editar/{id}(id=${especialidad.id})}" class="text-sm font-semibold text-blue-600">Editar</a>
+                    <form th:id="'eliminar-especialidad-' + ${especialidad.id}" th:action="@{/admin/especialidades/eliminar/{id}(id=${especialidad.id})}" method="post"></form>
+                    <button type="button"
+                            class="text-sm font-semibold text-red-500"
+                            th:attr="data-confirm-target='eliminar-especialidad-' + ${especialidad.id},data-confirm-message='¿Estás seguro de que deseas eliminar esta especialidad?'">
+                        Eliminar
+                    </button>
+                </div>
+            </article>
+        </div>
+    </article>
+</section>
+</html>

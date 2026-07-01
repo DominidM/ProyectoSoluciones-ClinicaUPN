@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Horarios Médicos</h2>
+                <p class="mt-1 text-sm text-muted">Bloques disponibles por doctor y día de la semana.</p>
+            </div>
+            <a th:href="@{/admin/horarios/nuevo}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                <i data-lucide="plus" class="h-4 w-4"></i>Agregar horario
+            </a>
+        </div>
+
+        <form method="get" class="mt-6 grid gap-3 lg:grid-cols-3">
+            <select name="doctorId" class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+                <option value="">Todos los doctores</option>
+                <option th:each="doctor : ${doctores}" th:value="${doctor.id}" th:text="${doctor.usuario.nombreCompleto}" th:selected="${filtroDoctor == doctor.id}"></option>
+            </select>
+            <select name="estado" class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+                <option value="">Todos los estados</option>
+                <option value="true" th:selected="${filtroEstado == true}">Activos</option>
+                <option value="false" th:selected="${filtroEstado == false}">Inactivos</option>
+            </select>
+            <button class="rounded-xl border border-gray-300 px-4 py-2 font-medium text-ink transition hover:bg-gray-50">Aplicar filtros</button>
+        </form>
+
+        <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+                <thead>
+                <tr class="border-b border-gray-100 text-muted">
+                    <th class="px-4 py-3 font-semibold">Doctor</th>
+                    <th class="px-4 py-3 font-semibold">Especialidad</th>
+                    <th class="px-4 py-3 font-semibold">Día</th>
+                    <th class="px-4 py-3 font-semibold">Hora inicio</th>
+                    <th class="px-4 py-3 font-semibold">Hora fin</th>
+                    <th class="px-4 py-3 font-semibold">Estado</th>
+                    <th class="px-4 py-3 font-semibold">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(horarios)}">
+                    <td colspan="7" class="px-4 py-8 text-center text-muted">No se encontraron horarios.</td>
+                </tr>
+                <tr th:each="horario : ${horarios}" class="border-b border-gray-100 last:border-0">
+                    <td class="px-4 py-4 font-medium text-ink" th:text="${horario.doctor.usuario.nombreCompleto}">Doctor</td>
+                    <td class="px-4 py-4 text-muted" th:text="${horario.doctor.especialidad.nombre}">Especialidad</td>
+                    <td class="px-4 py-4 text-muted" th:text="${horario.diaSemana}">LUNES</td>
+                    <td class="px-4 py-4 text-muted" th:text="${#temporals.format(horario.horaInicio, 'HH:mm')}">08:00</td>
+                    <td class="px-4 py-4 text-muted" th:text="${#temporals.format(horario.horaFin, 'HH:mm')}">12:00</td>
+                    <td class="px-4 py-4"><span th:replace="~{layout/fragments/badges :: estado(${horario.estado})}"></span></td>
+                    <td class="px-4 py-4">
+                        <div class="flex flex-wrap gap-3">
+                            <a th:href="@{/admin/horarios/editar/{id}(id=${horario.id})}" class="text-sm font-semibold text-blue-600">Editar</a>
+                            <form th:id="'eliminar-horario-' + ${horario.id}" th:action="@{/admin/horarios/eliminar/{id}(id=${horario.id})}" method="post"></form>
+                            <button type="button"
+                                    class="text-sm font-semibold text-red-500"
+                                    th:attr="data-confirm-target='eliminar-horario-' + ${horario.id},data-confirm-message='¿Estás seguro de que deseas eliminar este horario?'">
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+</html>

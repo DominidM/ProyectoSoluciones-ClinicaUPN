@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/doctor-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-2xl font-bold text-ink">Atenciones Clínicas</h2>
+        <p class="mt-1 text-sm text-muted">Atenciones registradas por ti en la clínica universitaria.</p>
+        <div class="mt-6 space-y-4">
+            <div th:if="${#lists.isEmpty(atenciones)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No has registrado atenciones todavía.</div>
+            <article th:each="atencion : ${atenciones}" class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-ink" th:text="${atencion.historiaClinica.paciente.usuario.nombreCompleto}">Paciente</h3>
+                        <p class="mt-2 text-sm text-muted" th:text="${#temporals.format(atencion.fechaAtencion, 'dd/MM/yyyy HH:mm')} + ' · ' + ${atencion.cita.especialidad.nombre}">Fecha</p>
+                        <p class="mt-1 text-sm text-muted" th:text="${atencion.practicante != null ? 'Practicante: ' + atencion.practicante.usuario.nombreCompleto : 'Sin practicante participante'}">Practicante</p>
+                    </div>
+                    <a th:href="@{/doctor/historia/{id}(id=${atencion.historiaClinica.paciente.id})}" class="rounded-xl border border-gray-300 px-4 py-2 text-sm font-medium text-ink transition hover:bg-gray-50">Historia</a>
+                </div>
+                <div class="mt-4 grid gap-4 md:grid-cols-2">
+                    <div><p class="text-xs font-semibold uppercase tracking-wide text-muted">Diagnóstico</p><p class="mt-1 text-sm text-ink" th:text="${atencion.diagnostico}">Diagnóstico</p></div>
+                    <div><p class="text-xs font-semibold uppercase tracking-wide text-muted">Tratamiento</p><p class="mt-1 text-sm text-ink" th:text="${atencion.tratamiento}">Tratamiento</p></div>
+                </div>
+            </article>
+        </div>
+    </article>
+</section>
+</html>

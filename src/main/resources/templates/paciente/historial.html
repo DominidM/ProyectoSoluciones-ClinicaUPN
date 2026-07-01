@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/paciente-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <div class="grid gap-6 xl:grid-cols-[420px,1fr]">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand/20 text-xl font-bold text-ink" th:text="${paciente.usuario.iniciales}">LR</div>
+                <div>
+                    <h2 class="text-2xl font-bold text-ink" th:text="${paciente.usuario.nombreCompleto}">Lucía Ramírez Soto</h2>
+                    <p class="text-sm text-muted" th:text="${paciente.usuario.correo}">lucia.ramirez@gmail.com</p>
+                </div>
+            </div>
+
+            <div class="mt-6 grid gap-4 text-sm">
+                <div class="flex justify-between gap-4"><span class="text-muted">DNI</span><span class="font-semibold text-ink" th:text="${paciente.usuario.dni}">74123456</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Edad</span><span class="font-semibold text-ink" th:text="${paciente.edad + ' años'}">28 años</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Sexo</span><span class="font-semibold text-ink" th:text="${paciente.sexo}">Femenino</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Teléfono</span><span class="font-semibold text-ink" th:text="${paciente.usuario.telefono}">921345678</span></div>
+                <div class="flex justify-between gap-4"><span class="text-muted">Dirección</span><span class="font-semibold text-right text-ink" th:text="${paciente.direccion}">Av. Los Rosales 234, Trujillo</span></div>
+            </div>
+
+        </article>
+
+        <div class="space-y-6">
+            <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-ink">Atenciones Clínicas (<span th:text="${#lists.size(historia.atenciones)}">1</span>)</h3>
+                <p class="mb-4 text-sm text-muted">Resumen de las atenciones registradas en tu historia clínica.</p>
+                <div class="space-y-4">
+                    <div th:if="${#lists.isEmpty(historia.atenciones)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">Todavía no tienes atenciones clínicas registradas.</div>
+                    <article th:each="atencion : ${historia.atenciones}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="font-semibold text-ink" th:text="${#temporals.format(atencion.fechaAtencion, 'dd/MM/yyyy')}">20/01/2025</p>
+                            <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700" th:text="${atencion.cita.especialidad.nombre}">Medicina General</span>
+                        </div>
+                        <div class="mt-3 grid gap-4 md:grid-cols-2">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-muted">Diagnóstico</p>
+                                <p class="mt-1 text-sm text-ink" th:text="${atencion.diagnostico}">Diagnóstico</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-muted">Tratamiento</p>
+                                <p class="mt-1 text-sm text-ink" th:text="${atencion.tratamiento}">Tratamiento</p>
+                            </div>
+                        </div>
+                        <div th:if="${atencion.observaciones}" class="mt-3">
+                            <p class="text-xs font-semibold uppercase tracking-wide text-muted">Observaciones</p>
+                            <p class="mt-1 text-sm text-ink" th:text="${atencion.observaciones}">Observaciones</p>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 class="text-xl font-bold text-ink">Citas relacionadas</h3>
+                <p class="mb-4 text-sm text-muted">Historial de tus citas asociadas a esta historia clínica.</p>
+                <div class="space-y-3">
+                    <div th:if="${#lists.isEmpty(citas)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes citas registradas.</div>
+                    <article th:each="cita : ${citas}" class="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="font-semibold text-ink" th:text="${cita.doctor.usuario.nombreCompleto}">Doctor</p>
+                            <p class="text-sm text-muted" th:text="${#temporals.format(cita.fechaCita, 'dd/MM/yyyy')} + ' · ' + ${#temporals.format(cita.horaInicio, 'HH:mm')} + ' · ' + ${cita.especialidad.nombre}">20/01/2025</p>
+                        </div>
+                        <span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span>
+                    </article>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+</html>

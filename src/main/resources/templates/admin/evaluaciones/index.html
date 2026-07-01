@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Evaluaciones</h2>
+                <p class="mt-1 text-sm text-muted">Historial de evaluaciones académicas de practicantes.</p>
+            </div>
+            <a th:href="@{/admin/evaluaciones/nueva}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                <i data-lucide="plus" class="h-4 w-4"></i>Agregar evaluación
+            </a>
+        </div>
+
+        <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+                <thead>
+                <tr class="border-b border-gray-100 text-muted">
+                    <th class="px-4 py-3 font-semibold">Practicante</th>
+                    <th class="px-4 py-3 font-semibold">Doctor supervisor</th>
+                    <th class="px-4 py-3 font-semibold">Fecha</th>
+                    <th class="px-4 py-3 font-semibold">Puntaje</th>
+                    <th class="px-4 py-3 font-semibold">Estado</th>
+                    <th class="px-4 py-3 font-semibold">Comentario</th>
+                    <th class="px-4 py-3 font-semibold">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(evaluaciones)}">
+                    <td colspan="7" class="px-4 py-8 text-center text-muted">No hay evaluaciones registradas.</td>
+                </tr>
+                <tr th:each="evaluacion : ${evaluaciones}" class="border-b border-gray-100 last:border-0">
+                    <td class="px-4 py-4 font-medium text-ink" th:text="${evaluacion.practicante.usuario.nombreCompleto}">Practicante</td>
+                    <td class="px-4 py-4 text-muted" th:text="${evaluacion.doctorSupervisor.usuario.nombreCompleto}">Doctor</td>
+                    <td class="px-4 py-4 text-muted" th:text="${#temporals.format(evaluacion.fechaEvaluacion, 'yyyy-MM-dd')}">2025-01-15</td>
+                    <td class="px-4 py-4"><span th:replace="~{layout/fragments/badges :: puntaje(${evaluacion.puntaje})}"></span></td>
+                    <td class="px-4 py-4"><span th:replace="~{layout/fragments/badges :: estado(${evaluacion.estado})}"></span></td>
+                    <td class="px-4 py-4 text-muted line-clamp-2" th:text="${evaluacion.comentario}">Comentario</td>
+                    <td class="px-4 py-4">
+                        <div class="flex flex-wrap gap-3">
+                            <a th:href="@{/admin/evaluaciones/editar/{id}(id=${evaluacion.id})}" class="text-sm font-semibold text-blue-600">Editar</a>
+                            <form th:id="'eliminar-evaluacion-' + ${evaluacion.id}" th:action="@{/admin/evaluaciones/eliminar/{id}(id=${evaluacion.id})}" method="post"></form>
+                            <button type="button"
+                                    class="text-sm font-semibold text-red-500"
+                                    th:attr="data-confirm-target='eliminar-evaluacion-' + ${evaluacion.id},data-confirm-message='¿Estás seguro de que deseas eliminar esta evaluación?'">
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+</html>

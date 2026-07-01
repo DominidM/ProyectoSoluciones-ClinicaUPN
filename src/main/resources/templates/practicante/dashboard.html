@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/practicante-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Atenciones asignadas</p><p class="mt-2 text-3xl font-bold text-ink" th:text="${metricas['atenciones']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Evaluaciones recibidas</p><p class="mt-2 text-3xl font-bold text-ink" th:text="${metricas['evaluaciones']}">0</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Promedio evaluación</p><p class="mt-2 text-3xl font-bold text-green-600" th:text="${#numbers.formatDecimal(metricas['promedio'], 1, 1)} + '/20'">17.0/20</p></article>
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"><p class="text-sm text-muted">Supervisor asignado</p><p class="mt-2 text-xl font-bold text-ink" th:text="${practicante.doctorSupervisor != null ? practicante.doctorSupervisor.usuario.nombreCompleto : 'Sin asignar'}">Supervisor</p></article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 class="text-xl font-bold text-ink">Mi Supervisor</h2>
+            <p class="mb-4 text-sm text-muted">Profesional responsable de tu seguimiento académico.</p>
+            <div th:if="${practicante.doctorSupervisor == null}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">Aún no tienes un supervisor asignado.</div>
+            <div th:if="${practicante.doctorSupervisor != null}" class="rounded-2xl bg-gray-50 p-5">
+                <p class="font-semibold text-ink" th:text="${practicante.doctorSupervisor.usuario.nombreCompleto}">Dr. Supervisor</p>
+                <p class="mt-1 text-sm text-muted" th:text="${practicante.doctorSupervisor.especialidad.nombre}">Especialidad</p>
+                <p class="mt-1 text-sm text-muted" th:text="${practicante.doctorSupervisor.usuario.correo}">correo</p>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 class="text-xl font-bold text-ink">Últimas Evaluaciones</h2>
+            <p class="mb-4 text-sm text-muted">Resumen de tus últimas valoraciones.</p>
+            <div class="space-y-3">
+                <div th:if="${#lists.isEmpty(ultimasEvaluaciones)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes evaluaciones registradas.</div>
+                <article th:each="evaluacion : ${ultimasEvaluaciones}" class="flex items-center justify-between gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                    <div>
+                        <p class="font-semibold text-ink" th:text="${evaluacion.doctorSupervisor.usuario.nombreCompleto}">Supervisor</p>
+                        <p class="text-sm text-muted" th:text="${#temporals.format(evaluacion.fechaEvaluacion, 'dd/MM/yyyy')}">15/01/2025</p>
+                    </div>
+                    <span th:replace="~{layout/fragments/badges :: puntaje(${evaluacion.puntaje})}"></span>
+                </article>
+            </div>
+        </article>
+    </div>
+
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-xl font-bold text-ink">Atenciones donde Participé</h2>
+        <p class="mb-4 text-sm text-muted">Últimos registros clínicos en los que apareces como practicante.</p>
+        <div class="space-y-4">
+            <div th:if="${#lists.isEmpty(ultimasAtenciones)}" class="rounded-2xl border border-dashed border-gray-200 p-6 text-sm text-muted">No tienes atenciones registradas.</div>
+            <article th:each="atencion : ${ultimasAtenciones}" class="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="font-semibold text-ink" th:text="${atencion.historiaClinica.paciente.usuario.nombreCompleto}">Paciente</p>
+                        <p class="text-sm text-muted" th:text="${atencion.doctor.usuario.nombreCompleto} + ' · ' + ${#temporals.format(atencion.fechaAtencion, 'dd/MM/yyyy')}">Doctor</p>
+                    </div>
+                    <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700" th:text="${atencion.cita.especialidad.nombre}">Especialidad</span>
+                </div>
+                <p class="mt-3 text-sm text-muted line-clamp-2" th:text="${atencion.diagnostico}">Diagnóstico</p>
+            </article>
+        </div>
+    </article>
+</section>
+</html>

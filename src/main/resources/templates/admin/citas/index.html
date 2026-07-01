@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/admin-layout :: layout(~{::section})}">
+<section>
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-ink">Citas</h2>
+                <p class="mt-1 text-sm text-muted">Agenda de citas médicas presenciales.</p>
+            </div>
+            <a th:href="@{/admin/citas/nueva}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-4 py-2 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                <i data-lucide="plus" class="h-4 w-4"></i>Agregar cita
+            </a>
+        </div>
+
+        <form method="get" class="mt-6 grid gap-3 lg:grid-cols-3">
+            <input type="text" name="q" th:value="${filtroQ}" placeholder="Buscar por paciente, doctor o especialidad"
+                   class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+            <select name="estado" class="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F5C518]">
+                <option value="">Todos los estados</option>
+                <option th:each="estadoItem : ${estados}" th:value="${estadoItem}" th:text="${estadoItem}" th:selected="${filtroEstado == estadoItem}"></option>
+            </select>
+            <button class="rounded-xl border border-gray-300 px-4 py-2 font-medium text-ink transition hover:bg-gray-50">Aplicar filtros</button>
+        </form>
+
+        <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+                <thead>
+                <tr class="border-b border-gray-100 text-muted">
+                    <th class="px-4 py-3 font-semibold">Paciente</th>
+                    <th class="px-4 py-3 font-semibold">Doctor</th>
+                    <th class="px-4 py-3 font-semibold">Especialidad</th>
+                    <th class="px-4 py-3 font-semibold">Fecha</th>
+                    <th class="px-4 py-3 font-semibold">Hora</th>
+                    <th class="px-4 py-3 font-semibold">Consultorio</th>
+                    <th class="px-4 py-3 font-semibold">Estado</th>
+                    <th class="px-4 py-3 font-semibold">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(citas)}">
+                    <td colspan="8" class="px-4 py-8 text-center text-muted">No se encontraron citas.</td>
+                </tr>
+                <tr th:each="cita : ${citas}" class="border-b border-gray-100 last:border-0">
+                    <td class="px-4 py-4 font-medium text-ink" th:text="${cita.paciente.usuario.nombreCompleto}">Paciente</td>
+                    <td class="px-4 py-4 text-muted" th:text="${cita.doctor.usuario.nombreCompleto}">Doctor</td>
+                    <td class="px-4 py-4 text-muted" th:text="${cita.especialidad.nombre}">Especialidad</td>
+                    <td class="px-4 py-4 text-muted" th:text="${#temporals.format(cita.fechaCita, 'dd/MM/yyyy')}">20/01/2025</td>
+                    <td class="px-4 py-4 text-muted" th:text="${#temporals.format(cita.horaInicio, 'HH:mm')} + ' - ' + ${#temporals.format(cita.horaFin, 'HH:mm')}">09:00 - 09:30</td>
+                    <td class="px-4 py-4 text-muted" th:text="${cita.consultorio.nombre}">Consultorio 101</td>
+                    <td class="px-4 py-4"><span th:replace="~{layout/fragments/badges :: cita(${cita.estado})}"></span></td>
+                    <td class="px-4 py-4">
+                        <div class="flex flex-wrap gap-3">
+                            <a th:href="@{/admin/citas/ver/{id}(id=${cita.id})}" class="text-sm font-semibold text-[#1F2937]">Ver</a>
+                            <a th:if="${cita.atencionClinica == null}" th:href="@{/admin/atenciones/nueva/{id}(id=${cita.id})}" class="text-sm font-semibold text-[#E8B800]">Atender</a>
+                            <form th:id="'cancelar-cita-' + ${cita.id}" th:action="@{/admin/citas/cancelar/{id}(id=${cita.id})}" method="post"></form>
+                            <button type="button"
+                                    class="text-sm font-semibold text-red-500"
+                                    th:attr="data-confirm-target='cancelar-cita-' + ${cita.id},data-confirm-message='¿Estás seguro de que deseas cancelar esta cita?'">
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+</html>

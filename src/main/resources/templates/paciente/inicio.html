@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/paciente-layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <article class="overflow-hidden rounded-3xl bg-carbon text-white shadow-sm">
+        <div class="flex flex-col gap-6 px-6 py-8 lg:flex-row lg:items-center lg:justify-between">
+            <div class="max-w-3xl">
+                <p class="text-sm font-medium text-brand/90">Portal del paciente</p>
+                <h2 class="mt-3 text-3xl font-bold leading-tight" th:text="'Bienvenida, ' + ${paciente.usuario.nombres}">Bienvenida, Lucía</h2>
+                <p class="mt-3 max-w-2xl text-sm text-gray-200">Consulta tus citas presenciales, revisa tu historial básico y solicita nuevas atenciones en la clínica universitaria.</p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a th:href="@{/paciente/solicitar-cita}" class="inline-flex items-center gap-2 rounded-xl bg-[#F5C518] px-5 py-3 font-semibold text-[#1F2937] transition hover:bg-[#E8B800]">
+                        <i data-lucide="calendar-plus" class="h-4 w-4"></i>Solicitar cita
+                    </a>
+                    <a th:href="@{/paciente/mis-citas}" class="inline-flex items-center gap-2 rounded-xl border border-white/30 px-5 py-3 font-medium text-white transition hover:bg-white/10">
+                        <i data-lucide="calendar-days" class="h-4 w-4"></i>Mis citas
+                    </a>
+                </div>
+            </div>
+            <div class="grid w-full max-w-xl gap-4 md:grid-cols-3">
+                <article class="rounded-3xl bg-white p-6 text-center text-ink">
+                    <p class="text-4xl font-bold" th:text="${metricas.citas}">2</p>
+                    <p class="mt-2 text-sm text-muted">Total citas</p>
+                </article>
+                <article class="rounded-3xl bg-white p-6 text-center text-ink">
+                    <p class="text-4xl font-bold" th:text="${metricas.atendidas}">0</p>
+                    <p class="mt-2 text-sm text-muted">Citas atendidas</p>
+                </article>
+                <article class="rounded-3xl bg-white p-6 text-center text-ink">
+                    <p class="text-4xl font-bold" th:text="${metricas.atenciones}">1</p>
+                    <p class="mt-2 text-sm text-muted">Atenciones</p>
+                </article>
+            </div>
+        </div>
+    </article>
+
+    <div class="grid gap-6 xl:grid-cols-[1.25fr,1fr]">
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-ink">Próxima cita</h3>
+                    <p class="mt-1 text-sm text-muted">Tu siguiente atención presencial programada.</p>
+                </div>
+                <a th:href="@{/paciente/mis-citas}" class="text-sm font-semibold text-[#E8B800]">Ver todas</a>
+            </div>
+
+            <div th:if="${proximaCita == null}" class="mt-6 rounded-3xl border border-dashed border-gray-200 bg-gray-50 p-8 text-sm text-muted">
+                Aún no tienes una cita próxima registrada.
+            </div>
+
+            <div th:if="${proximaCita != null}" class="mt-6 rounded-3xl bg-brand/15 p-5">
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h4 class="text-xl font-bold text-ink" th:text="${proximaCita.doctor.usuario.nombreCompleto}">Dr. Carlos Mendoza Reyes</h4>
+                            <span th:replace="~{layout/fragments/badges :: cita(${proximaCita.estado})}"></span>
+                        </div>
+                        <p class="mt-2 text-sm text-muted" th:text="${proximaCita.especialidad.nombre}">Medicina General</p>
+                        <p class="mt-1 text-sm text-muted" th:text="${proximaCita.consultorio.nombre}">Consultorio 101</p>
+                    </div>
+                    <div class="space-y-1 text-sm text-muted">
+                        <p th:text="${#temporals.format(proximaCita.fechaCita, 'dd/MM/yyyy')}">20/01/2025</p>
+                        <p th:text="${#temporals.format(proximaCita.horaInicio, 'HH:mm')} + ' - ' + ${#temporals.format(proximaCita.horaFin, 'HH:mm')}">09:00 - 09:30</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-ink" th:text="${proximaCita.motivo}">Control general y chequeo preventivo</p>
+            </div>
+        </article>
+
+        <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-ink">Accesos rápidos</h3>
+                    <p class="mt-1 text-sm text-muted">Navega a los módulos principales de tu portal.</p>
+                </div>
+            </div>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                <a th:href="@{/paciente/historial}" class="rounded-2xl border border-gray-200 bg-gray-50 p-5 transition hover:border-brand hover:bg-brand/10">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-ink shadow-sm">
+                        <i data-lucide="file-heart" class="h-5 w-5"></i>
+                    </div>
+                    <h4 class="mt-4 font-semibold text-ink">Mi historial</h4>
+                    <p class="mt-1 text-sm text-muted">Consulta tu resumen clínico y atenciones registradas.</p>
+                </a>
+                <a th:href="@{/paciente/especialidades}" class="rounded-2xl border border-gray-200 bg-gray-50 p-5 transition hover:border-brand hover:bg-brand/10">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-ink shadow-sm">
+                        <i data-lucide="stethoscope" class="h-5 w-5"></i>
+                    </div>
+                    <h4 class="mt-4 font-semibold text-ink">Especialidades</h4>
+                    <p class="mt-1 text-sm text-muted">Explora las áreas disponibles para atención presencial.</p>
+                </a>
+            </div>
+        </article>
+    </div>
+
+    <article class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <h3 class="text-2xl font-bold text-ink">Especialidades disponibles</h3>
+                <p class="mt-1 text-sm text-muted">Acceso rápido a las áreas activas de la clínica.</p>
+            </div>
+            <a th:href="@{/paciente/especialidades}" class="text-sm font-semibold text-[#E8B800]">Ver todas</a>
+        </div>
+        <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <article th:each="especialidad : ${especialidades}" class="rounded-3xl border border-gray-200 bg-gray-50 p-5 transition hover:border-brand hover:bg-brand/10">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-ink shadow-sm">
+                    <i data-lucide="badge-plus" class="h-5 w-5"></i>
+                </div>
+                <h4 class="mt-4 text-xl font-bold text-ink" th:text="${especialidad.nombre}">Medicina General</h4>
+                <p class="mt-2 line-clamp-3 text-sm text-muted" th:text="${especialidad.descripcion}">Descripción</p>
+                <a th:href="@{/paciente/solicitar-cita}" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ink">
+                    Solicitar cita
+                    <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                </a>
+            </article>
+        </div>
+    </article>
+</section>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="sidebar" class="app-sidebar flex h-full min-h-screen flex-col bg-carbon text-white">
+    <div class="flex items-center gap-3 border-b border-white/10 px-5 py-5">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-carbon">
+            <i data-lucide="heart-pulse" class="h-5 w-5"></i>
+        </div>
+        <div><p class="font-semibold">Clínica UPN</p><p class="text-sm text-gray-300">Paciente</p></div>
+    </div>
+    <nav class="flex-1 space-y-1 px-3 py-4 text-sm">
+        <a th:href="@{/paciente/inicio}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="house" class="h-4 w-4"></i>Inicio</a>
+        <a th:href="@{/paciente/mis-citas}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="calendar-check-2" class="h-4 w-4"></i>Mis Citas</a>
+        <a th:href="@{/paciente/solicitar-cita}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="calendar-plus" class="h-4 w-4"></i>Solicitar Cita</a>
+        <a th:href="@{/paciente/historial}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="file-heart" class="h-4 w-4"></i>Mi Historial</a>
+        <a th:href="@{/paciente/especialidades}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="book-open" class="h-4 w-4"></i>Especialidades</a>
+        <a th:href="@{/paciente/perfil}" class="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="user-circle-2" class="h-4 w-4"></i>Perfil</a>
+    </nav>
+    <div class="border-t border-white/10 px-4 py-4">
+        <form th:action="@{/logout}" method="post">
+            <button class="flex w-full items-center gap-3 rounded-xl px-4 py-3 hover:bg-white/10 transition"><i data-lucide="log-out" class="h-4 w-4"></i>Cerrar sesión</button>
+        </form>
+    </div>
+</aside>
+</html>
