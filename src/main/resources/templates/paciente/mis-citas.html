@@ -39,6 +39,12 @@
                         <p th:text="${cita.consultorio.nombre}">Consultorio 101</p>
                     </div>
                 </div>
+                <div th:if="${cita.estado.name() == 'PENDIENTE' and urlsPago != null and urlsPago.containsKey(cita.id)}" class="mt-3 border-t border-gray-100 pt-3">
+                    <a th:href="${urlsPago.get(cita.id)}"
+                       class="inline-flex items-center gap-2 rounded-xl bg-[#009EE3] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0089C7]">
+                        <i data-lucide="credit-card" class="h-4 w-4"></i>Pagar S/ 10.00
+                    </a>
+                </div>
             </article>
         </div>
     </article>

@@ -200,6 +200,19 @@ CREATE TABLE atenciones_clinicas (
         ON DELETE SET NULL
 );
 
+CREATE TABLE pagos (
+    id_pago BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_cita BIGINT NOT NULL UNIQUE,
+    monto DECIMAL(10,2) NOT NULL,
+    estado ENUM('PENDIENTE','APROBADO','RECHAZADO','CANCELADO','DEVUELTO') NOT NULL DEFAULT 'PENDIENTE',
+    preference_id VARCHAR(100),
+    payment_id VARCHAR(50),
+    merchant_order_id VARCHAR(50),
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME,
+    CONSTRAINT fk_pagos_citas FOREIGN KEY (id_cita) REFERENCES citas(id_cita)
+);
+
 CREATE TABLE evaluaciones_practicantes (
     id_evaluacion BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_practicante BIGINT NOT NULL,

@@ -27,6 +27,7 @@ public class CitaService {
     private final DoctorRepository doctorRepository;
     private final EspecialidadRepository especialidadRepository;
     private final ConsultorioRepository consultorioRepository;
+    private final PagoService pagoService;
 
     public List<Cita> listarAdmin(String q, EstadoCita estado) {
         return citaRepository.buscar(texto(q), null, null, estado);
@@ -84,7 +85,9 @@ public class CitaService {
     public Cita solicitarComoPaciente(Paciente paciente, CitaFormDTO dto) {
         dto.setPacienteId(paciente.getId());
         dto.setEstado(EstadoCita.PENDIENTE);
-        return guardarCita(null, dto, false);
+        Cita cita = guardarCita(null, dto, false);
+        pagoService.crearOPagarCita(cita);
+        return cita;
     }
 
     @Transactional

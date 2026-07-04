@@ -32,7 +32,7 @@ public class SecurityConfig {
         http.authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/especialidades", "/sobre-clinica", "/registro", "/registro/**", "/login",
-                                "/css/**", "/js/**", "/img/**", "/static/**").permitAll()
+                                "/css/**", "/js/**", "/img/**", "/static/**", "/api/pagos/webhook", "/pagos/exito", "/pagos/fallo", "/pagos/pendiente").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/doctor/**").hasRole("DOCTOR")
                         .requestMatchers("/practicante/**").hasRole("PRACTICANTE")

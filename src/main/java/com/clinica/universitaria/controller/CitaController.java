@@ -24,6 +24,7 @@ public class CitaController {
     private final DoctorService doctorService;
     private final EspecialidadService especialidadService;
     private final ConsultorioService consultorioService;
+    private final PagoService pagoService;
 
     @GetMapping("/admin/citas")
     public String index(@RequestParam(required = false) String q,
@@ -96,9 +97,19 @@ public class CitaController {
     @GetMapping("/paciente/mis-citas")
     public String misCitasPaciente(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         var paciente = pacienteService.obtenerPorCorreo(userDetails.getUsername());
+        var citas = citaService.listarPorPaciente(paciente);
         model.addAttribute("pageTitle", "Mis Citas");
         model.addAttribute("pageDescription", "Historial de tus citas médicas.");
-        model.addAttribute("citas", citaService.listarPorPaciente(paciente));
+        model.addAttribute("citas", citas);
+
+        var urlsPago = new java.util.HashMap<Long, String>();
+        for (var cita : citas) {
+            var initPoint = pagoService.getInitPoint(cita.getId());
+            if (initPoint != null) {
+                urlsPago.put(cita.getId(), initPoint);
+            }
+        }
+        model.addAttribute("urlsPago", urlsPago);
         return "paciente/mis-citas";
     }
 
